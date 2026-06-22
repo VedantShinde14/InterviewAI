@@ -3,17 +3,38 @@ from config import GEMINI_API_KEY
 
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-def generate_question(domain):
+
+def generate_question(domain, history):
+
+    history_text = ""
+
+    for item in history:
+
+        history_text += f"""
+        Previous Question:
+        {item['question']}
+
+        Candidate Answer:
+        {item['answer']}
+        """
 
     prompt = f"""
     You are an expert interviewer.
 
-    Conduct a {domain} interview.
+    Interview Domain:
+    {domain}
 
-    Ask only ONE interview question.
+    Previous Interview History:
+    {history_text}
 
-    Do not provide explanation.
-    Do not provide answer.
+    Rules:
+    1. Do NOT repeat previous questions.
+    2. Increase difficulty gradually.
+    3. Ask only ONE question.
+    4. Keep it interview style.
+    5. Focus on technical depth.
+
+    Generate the next interview question.
     """
 
     response = client.models.generate_content(
