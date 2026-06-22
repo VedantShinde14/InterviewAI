@@ -37,9 +37,14 @@ def generate_question(domain, history):
     Generate the next interview question.
     """
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt
-    )
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
 
-    return response.text
+        return response.text
+
+    except Exception as e:
+        print(f"Gemini Error: {e}")
+        return "Unable to generate question right now."
